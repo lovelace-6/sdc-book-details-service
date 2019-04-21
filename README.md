@@ -1,3 +1,16 @@
+# book-main-details
+
+
+### Endpoints
+
+|Functionality                                                    | Request method |  URL       | Request Body                                                                                                             | Response                                                                                                                            |
+|-------------------------------------------------------------------------------|-------------------|-----------------------------------------------------------------------|-----------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------|
+ | read book details                           | GET          | /books/:id/details | none                                                                  |                                                            {"id":1,"type":"Kindle","pagenum":1697,"publisher":"Lubowitz - Turcotte","firstPubDate":"November 21st 1987","originalPubDate":"November 21st 1987","title":"Games","isbn10":"9834563062","isbn13":"1484547596746","language":"French"} |
+| create book                | POST         | /books/details | {"type":"Kindle","pagenum":1697,"publisher":"Lubowitz - Turcotte","firstPubDate":"November 21st 1987","originalPubDate":"November 21st 1987","title":"Games","isbn10":"9834563062","isbn13":"1484547596746","language":"French"}                                                                      | {"id": 1}
+| edit an existing book     | PUT          | /books/:id/details | {"type":"Kindle","pagenum":1697,"publisher":"Lubowitz - Turcotte","firstPubDate":"November 21st 1987","originalPubDate":"November 21st 1987","title":"Games","isbn10":"9834563062","isbn13":"1484547596746","language":"French"}           | 200                                                                   |
+| delete book | DELETE       | /books/:id/details | none  | 200
+
+
 # andrew-fec-service (ExtraDetails Component)
 
 Recreates the extra details component of goodreads.com. The component is minimized when first rendered and can be expanded to its full view by clicking the more button.

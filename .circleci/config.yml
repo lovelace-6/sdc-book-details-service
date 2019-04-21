@@ -1,0 +1,35 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/fec-starter
+    docker:
+      - image: circleci/node:10
+
+      - image: mysql:5.7
+        environment:
+            MYSQL_ALLOW_EMPTY_PASSWORD: yes
+            MYSQL_ROOT_PASSWORD: ''
+            MYSQL_DATABASE: books
+
+    steps:
+      - checkout
+
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+
+      - run:
+          name: install-npm-fect
+          command: npm install
+
+      - save_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+          paths:
+            - ./node_modules
+
+      - run:
+          name: seed db
+          command: npm run seed
+
+      - run:
+          name: tests
+          command: npm test

@@ -59,10 +59,11 @@ const createBook = () => {
     isbn10: source.mainDetails.isbn10[getRandomInt(0, 10000)],
     isbn13: source.mainDetails.isbn13[getRandomInt(0, 10000)],
     language: source.mainDetails.language[getRandomInt(0, 10000)],
-    characters: source.characters[getRandomInt(0, 10000)].join("|"),
-    settings: source.settings[getRandomInt(0, 10000)].join("|"),
-    litAwards: source.litAwards[getRandomInt(0, 10000)].join("|"),
-    editions: source.editions[getRandomInt(0, 10000)].join("|"),
+    //will use JSON column type for these fields
+    characters: JSON.stringify(source.characters[getRandomInt(0, 10000)]),
+    settings: JSON.stringify(source.settings[getRandomInt(0, 10000)]),
+    litAwards: JSON.stringify(source.litAwards[getRandomInt(0, 10000)]),
+    editions: JSON.stringify(source.editions[getRandomInt(0, 10000)]),
   };
   return dataObj;
 }

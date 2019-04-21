@@ -8,6 +8,7 @@ node_modules/
 public/bundle.js
 public/bundle-details.js
 
+bookDetails.csv
 pids
 *.pid
 logs

@@ -19,7 +19,7 @@ module.exports.type = type;
 /* =================== Page Number ===================== */
 
 const pageNum = () => {
-  let num = faker.random.number({min: 10, max: 1000});
+  let num = faker.random.number({ min: 10, max: 1000 });
   return num;
 };
 module.exports.pageNum = pageNum;
@@ -94,7 +94,7 @@ module.exports.title = title;
 
 const isbn = (limit) => {
 
-  const options = limit === 10 ? {min: 1000000000, max: 9999999999} : {min: 1000000000000, max: 9999999999999}
+  const options = limit === 10 ? { min: 1000000000, max: 9999999999 } : { min: 1000000000000, max: 9999999999999 }
   let isbnNum = faker.random.number(options).toString();
   return isbnNum;
 };
@@ -140,7 +140,7 @@ const awardsArr = () => {
     const awardIndex = getRandomInt(0, 11);
     const name = awards[awardIndex];
     const date = faker.date.past(5).getFullYear();
-    awardArray.push(`${name} ${date}`);
+    awardArray.push({name, date});
     num -= 1;
   }
 
@@ -203,7 +203,7 @@ const editionsArr = () => {
       // rating: rating()
     };
 
-    editionsArray.push(JSON.stringify(editionsObj));
+    editionsArray.push(editionsObj);
     num -= 1;
   }
   return editionsArray;
@@ -217,7 +217,7 @@ const settingsArr = () => {
   const location = () => {
     const city = faker.address.city();
     const country = faker.address.country();
-    return `${city} ${country}`;
+    return { city, country };
   };
 
   const settingsArray = [];

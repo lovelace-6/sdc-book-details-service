@@ -1,9 +1,9 @@
 /* eslint-disable arrow-body-style */
 const mysql = require('mysql');
 const Promise = require('bluebird');
-const { seedAllData, writeRecordsToFile } = require('./seedMethods');
+const { writeRecordsToFile } = require('./seedMethods');
 
-const ONE_MILLION = 1000000
+const ONE_MILLION = 1000000;
 
 writeRecordsToFile(ONE_MILLION * 10);
 

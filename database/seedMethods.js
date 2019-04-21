@@ -7,32 +7,6 @@ const fs = require('fs');
 const fastCSV = require('fast-csv');
 
 
-
-// function writeBooks() {
-//   while (i > 0) {
-//     if (!csvWriteStream.write(generateBooks())) {
-//       i--
-//       return
-//     }
-//     i--
-//   }
-//   var end = new Date() - start
-//   console.log('time required to generate CSV', end, 'ms')
-//   csvWriteStream.end();
-
-// }
-
-
-
-// csvWriteStream.on('drain', () => {
-//   writeBooks();
-// });
-// var i = 10000000;
-
-
-
-
-
 const createDataArray = (size) => {
   const dataArray = [];
   for (let i = 0; i < size; i++) {
@@ -162,18 +136,10 @@ const seedDb = (data, db) => {
 };
 
 const writeRecordsToFile = (size) => {
-    // const dataArr = createDataArray(size);
-    // console.log('finished making dataArr: ', dataArr.length);
-    // const fsWriteStream = fs.createWriteStream("bookDetails.csv");f
-    // fsWriteStream.on("finish", () => {
-    //   console.log("finished writing bookDetails CSV");
-    // });
-    // fastCSV
-    //   .writeToStream(fsWriteStream, dataArr, {headers: true});
-
   const LABEL = 'CSV data writing';
   console.time(LABEL);
-  const csvWriteStream = fastCSV.createWriteStream({headers: true});
+  //use '|' delimiter to avoid conflict with fields with commas
+  const csvWriteStream = fastCSV.createWriteStream({headers: true, delimiter: '|'});
   const fsWriteStream = fs.createWriteStream("bookDetails.csv");
   fsWriteStream.on("finish", () => {
     console.log("finished writing bookDetails CSV");
@@ -181,7 +147,7 @@ const writeRecordsToFile = (size) => {
   });
   csvWriteStream.pipe(fsWriteStream);
   let i = -1;
-  const writeToCSV = () => {
+  const writeNextRecordToCSV = () => {
     i++;
     if (i === size) {
       return csvWriteStream.end();
@@ -189,41 +155,38 @@ const writeRecordsToFile = (size) => {
     let nextBook = createBook();
     let canContinue = csvWriteStream.write(nextBook);
     if (!canContinue) {
-      csvWriteStream.once('drain', writeToCSV);
+      csvWriteStream.once('drain', writeNextRecordToCSV);
     } else {
-      writeToCSV();
+      writeNextRecordToCSV();
     }
   }
 
-  writeToCSV();
-
-
-
+  writeNextRecordToCSV();
 }
 
 module.exports.writeRecordsToFile = writeRecordsToFile;
 
 // seed all 100 data objects to database!
-const seedAllData = (db) => {
-  console.log('before creating data array')
-  const dataArray = createDataArray();
-  console.log('data array complete, length: ', dataArray.length)
-  return;
-  //write it to a file
+// const seedAllData = (db) => {
+//   console.log('before creating data array')
+//   const dataArray = createDataArray();
+//   console.log('data array complete, length: ', dataArray.length)
+//   return;
+//   //write it to a file
 
-  const promiseArray = [];
+//   const promiseArray = [];
 
-  for (let i = 0; i < dataArray.length; i++) {
-    promiseArray.push(seedDb(dataArray[i], db));
-  }
+//   for (let i = 0; i < dataArray.length; i++) {
+//     promiseArray.push(seedDb(dataArray[i], db));
+//   }
 
-  Promise.all(promiseArray)
-    .then((results) => {
-      console.log('-----results-----\n', results);
-      db.end(() => {
-        console.log('end connection after seed!');
-      });
-    });
-};
+//   Promise.all(promiseArray)
+//     .then((results) => {
+//       console.log('-----results-----\n', results);
+//       db.end(() => {
+//         console.log('end connection after seed!');
+//       });
+//     });
+// };
 
-module.exports.seedAllData = seedAllData;
+// module.exports.seedAllData = seedAllData;

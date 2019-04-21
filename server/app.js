@@ -32,7 +32,6 @@ app.get('/books/:id/details', (req, res) => {
 });
 
 
-//TODO - how should the URL change?
 app.post('/books/details', (req, res) => {
   const { id } = req.params;
   //create book

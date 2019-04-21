@@ -12,7 +12,7 @@ app.use(cors());
 const staticPath = `${__dirname}/../public`;
 app.use('/books/:id', express.static(staticPath));
 
-// get initinal details
+// get initial details
 app.get('/books/:id/details', (req, res) => {
   const { id } = req.params;
 
@@ -31,6 +31,24 @@ app.get('/books/:id/details', (req, res) => {
     });
 });
 
+
+//TODO - how should the URL change?
+app.post('/books/details', (req, res) => {
+  const { id } = req.params;
+  //create book
+});
+
+app.put('/books/:id/details', (req, res) => {
+  const { id } = req.params;
+  //update book
+
+});
+
+app.delete('/books/:id/details', (req, res) => {
+  const { id } = req.params;
+  //delete book
+
+});
 // get data from either characters, awards, or editions table depending on table variable.
 app.get('/books/:id/details/:table', (req, res) => {
   const { id } = req.params;

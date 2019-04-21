@@ -19,11 +19,7 @@ module.exports.type = type;
 /* =================== Page Number ===================== */
 
 const pageNum = () => {
-  let num = faker.random.number();
-  // if page number is less than 10 or greater than 10,000
-  while (num < 10 || num > 2000) {
-    num = faker.random.number();
-  }
+  let num = faker.random.number({min: 10, max: 1000});
   return num;
 };
 module.exports.pageNum = pageNum;
@@ -97,25 +93,16 @@ module.exports.title = title;
 /* =================== ISBN generator ===================== */
 
 const isbn = (limit) => {
-  let isbnNum = '';
 
-  // while isbn length is less than 11;
-  while (isbnNum.length < (limit + 1)) {
-    // add to isbn string;
-    const num = faker.random.number();
-    isbnNum += num.toString();
-  }
-  // splice isbn until 10th char
-  isbnNum = isbnNum.slice(0, limit);
+  const options = limit === 10 ? {min: 1000000000, max: 9999999999} : {min: 1000000000000, max: 9999999999999}
+  let isbnNum = faker.random.number(options).toString();
   return isbnNum;
 };
 module.exports.isbn = isbn;
 
 /* =================== Language generator ===================== */
-
+const languages = ['English', 'Korean', 'Spanish', 'Polish', 'Russian', 'Japanese', 'Italian', 'French', 'Chinese', 'Indian'];
 const language = () => {
-  const languages = ['English', 'Korean', 'Spanish', 'Polish', 'Russian', 'Japanese', 'Italian', 'French', 'Chinese', 'Indian'];
-
   const randNum = getRandomInt(0, 10);
 
   return languages[randNum];
@@ -127,7 +114,7 @@ module.exports.language = language;
 const characterArr = () => {
   const charArr = [];
 
-  let num = getRandomInt(0, 15);
+  let num = getRandomInt(1, 5);
 
   while (num > 0) {
     const characterName = faker.fake('{{name.firstName}} {{name.lastName}}');
@@ -140,21 +127,20 @@ const characterArr = () => {
 module.exports.characterArr = characterArr;
 
 /* =================== Awards Arr ===================== */
+const awards = [
+  'Specsavers National Book Awards', 'Man Booker Prize', 'Pulitzer Prize', 'Costa Book Awards', 'Neustadt International Prize for Literature', 'Hugo Award', 'Guardian First Book Award', 'National Book Award', 'Bailey\'s Women\'s Prize for Fiction', 'The John Newbery Medal', 'Edgar Awards', 'National Book Critics Circle Award',
+];
 
 const awardsArr = () => {
   const awardArray = [];
-  let num = getRandomInt(0, 16);
+  let num = getRandomInt(0, 3);
 
-  const awards = [
-    'Specsavers National Book Awards', 'Man Booker Prize', 'Pulitzer Prize', 'Costa Book Awards', 'Neustadt International Prize for Literature', 'Hugo Award', 'Guardian First Book Award', 'National Book Award', 'Bailey\'s Women\'s Prize for Fiction', 'The John Newbery Medal', 'Edgar Awards', 'National Book Critics Circle Award',
-  ];
 
   while (num > 0) {
-    const awardObj = {};
     const awardIndex = getRandomInt(0, 11);
-    awardObj.name = awards[awardIndex];
-    awardObj.date = faker.date.past(5).getFullYear();
-    awardArray.push(awardObj);
+    const name = awards[awardIndex];
+    const date = faker.date.past(5).getFullYear();
+    awardArray.push(`${name} ${date}`);
     num -= 1;
   }
 
@@ -164,19 +150,19 @@ const awardsArr = () => {
 module.exports.awardsArr = awardsArr;
 
 /* =================== Cover Urls ===================== */
+const urlStringArr = [
+  'https://loremflickr.com/320/240/book,cover/all?random=1',
+  'https://loremflickr.com/320/240/book,cover/all?random=2',
+  'https://loremflickr.com/320/240/book,cover/all?random=3',
+  'https://loremflickr.com/320/240/book,cover/all?random=4',
+  'https://loremflickr.com/320/240/book,cover/all?random=5',
+  'https://loremflickr.com/320/240/book,cover/all?random=6',
+  'https://loremflickr.com/320/240/book,cover/all?random=7',
+  'https://loremflickr.com/320/240/book,cover/all?random=8',
+  'https://loremflickr.com/320/240/book,cover/all?random=9',
+  'https://loremflickr.com/320/240/book,cover/all?random=10',
+];
 const coverUrl = () => {
-  const urlStringArr = [
-    'https://s3.us-east-2.amazonaws.com/hrr37-fec/fec-bookcovers/editionPic0.jpg',
-    'https://s3.us-east-2.amazonaws.com/hrr37-fec/fec-bookcovers/editionPic1.jpg',
-    'https://s3.us-east-2.amazonaws.com/hrr37-fec/fec-bookcovers/editionPic2.jpg',
-    'https://s3.us-east-2.amazonaws.com/hrr37-fec/fec-bookcovers/editionPic3.jpg',
-    'https://s3.us-east-2.amazonaws.com/hrr37-fec/fec-bookcovers/editionPic4.jpg',
-    'https://s3.us-east-2.amazonaws.com/hrr37-fec/fec-bookcovers/editionPic5.jpg',
-    'https://s3.us-east-2.amazonaws.com/hrr37-fec/fec-bookcovers/editionPic6.jpg',
-    'https://s3.us-east-2.amazonaws.com/hrr37-fec/fec-bookcovers/editionPic7.jpg',
-    'https://s3.us-east-2.amazonaws.com/hrr37-fec/fec-bookcovers/editionPic8.jpg',
-    'https://s3.us-east-2.amazonaws.com/hrr37-fec/fec-bookcovers/editionPic9.jpg',
-  ];
   const num = getRandomInt(0, 10);
   return urlStringArr[num];
 };
@@ -200,7 +186,7 @@ module.exports.coverUrl = coverUrl;
 /* =================== Editions Array ===================== */
 const editionsArr = () => {
   const editionsArray = [];
-  let num = getRandomInt(1, 8);
+  let num = getRandomInt(1, 3);
 
   while (num > 0) {
     const editionsObj = {
@@ -217,7 +203,7 @@ const editionsArr = () => {
       // rating: rating()
     };
 
-    editionsArray.push(editionsObj);
+    editionsArray.push(JSON.stringify(editionsObj));
     num -= 1;
   }
   return editionsArray;
@@ -231,13 +217,13 @@ const settingsArr = () => {
   const location = () => {
     const city = faker.address.city();
     const country = faker.address.country();
-    return { city, country };
+    return `${city} ${country}`;
   };
 
   const settingsArray = [];
-  const num = getRandomInt(0, 6);
+  const num = getRandomInt(1, 6);
 
-  for (let i = 0; i < num; i += 1) {
+  for (let i = 0; i < num; i++) {
     settingsArray.push(location());
   }
 

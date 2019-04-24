@@ -32,6 +32,5 @@ pool.query(`CREATE TABLE IF NOT EXISTS details (
     }
     console.log('done with copy');
     pool.end();
-  })
-  // pool.query(`COPY details FROM '/Users/anacollado/Desktop/hr-projects/sdc-book-details-service/bookDetails.csv' WITH (FORMAT CSV, Header)`)
-})
+  });
+});

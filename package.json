@@ -8,7 +8,9 @@
     "node": ">=6.13.0"
   },
   "scripts": {
-    "seed": "node database/seed.js",
+    "writeToCSV": "node database/seed.js",
+    "writeCSVToPG": "node database/writeFiletoDb.js",
+    "checkCSV": "node checkCSVFile.js",
     "drop:tables": "node database/dropTables.js",
     "start": "node server/server.js",
     "start:dev": "nodemon server/server.js",
@@ -29,6 +31,7 @@
     "morgan": "^1.9.1",
     "mysql": "^2.16.0",
     "nodemon": "^1.18.11",
+    "pg": "^7.10.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-router": "^5.0.0",

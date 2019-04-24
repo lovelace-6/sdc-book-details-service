@@ -2,14 +2,15 @@
 /* eslint-disable no-shadow */
 
 const Promise = require('bluebird');
-const { createData } = require('./sampleDataModel');
+const { createBook } = require('./sampleDataModel');
+const fs = require('fs');
+const fastCSV = require('fast-csv');
 
-// creates a data array for 100 BOOKS
 
-const createDataArray = () => {
+const createDataArray = (size) => {
   const dataArray = [];
-  for (let i = 0; i < 100; i += 1) {
-    const data = createData();
+  for (let i = 0; i < size; i++) {
+    const data = createBook();
     dataArray.push(data);
   }
   return dataArray;
@@ -134,22 +135,58 @@ const seedDb = (data, db) => {
     });
 };
 
-// seed all 100 data objects to database!
-const seedAllData = (db) => {
-  const dataArray = createDataArray();
-  const promiseArray = [];
-
-  for (let i = 0; i < dataArray.length; i += 1) {
-    promiseArray.push(seedDb(dataArray[i], db));
+const writeRecordsToFile = (size) => {
+  const LABEL = 'CSV data writing';
+  console.time(LABEL);
+  //use '|' delimiter to avoid conflict with fields with commas
+  const csvWriteStream = fastCSV.createWriteStream({headers: true, delimiter: '|'});
+  const fsWriteStream = fs.createWriteStream("bookDetails.csv");
+  fsWriteStream.on("finish", () => {
+    console.log("finished writing bookDetails CSV");
+    console.timeEnd(LABEL);
+  });
+  csvWriteStream.pipe(fsWriteStream);
+  let i = -1;
+  const writeNextRecordToCSV = () => {
+    i++;
+    if (i === size) {
+      return csvWriteStream.end();
+    }
+    let nextBook = createBook();
+    let canContinue = csvWriteStream.write(nextBook);
+    if (!canContinue) {
+      csvWriteStream.once('drain', writeNextRecordToCSV);
+    } else {
+      writeNextRecordToCSV();
+    }
   }
 
-  Promise.all(promiseArray)
-    .then((results) => {
-      console.log('-----results-----\n', results);
-      db.end(() => {
-        console.log('end connection after seed!');
-      });
-    });
-};
+  writeNextRecordToCSV();
+}
 
-module.exports.seedAllData = seedAllData;
+module.exports.writeRecordsToFile = writeRecordsToFile;
+
+// seed all 100 data objects to database!
+// const seedAllData = (db) => {
+//   console.log('before creating data array')
+//   const dataArray = createDataArray();
+//   console.log('data array complete, length: ', dataArray.length)
+//   return;
+//   //write it to a file
+
+//   const promiseArray = [];
+
+//   for (let i = 0; i < dataArray.length; i++) {
+//     promiseArray.push(seedDb(dataArray[i], db));
+//   }
+
+//   Promise.all(promiseArray)
+//     .then((results) => {
+//       console.log('-----results-----\n', results);
+//       db.end(() => {
+//         console.log('end connection after seed!');
+//       });
+//     });
+// };
+
+// module.exports.seedAllData = seedAllData;

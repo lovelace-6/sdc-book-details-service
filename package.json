@@ -10,6 +10,7 @@
   "scripts": {
     "writeToCSV": "node database/seed.js",
     "writeCSVToPG": "node database/writeFiletoDb.js",
+    "writeCSVToCass": "cqlsh -f ./database/createCassandraDb.cql",
     "checkCSV": "node checkCSVFile.js",
     "drop:tables": "node database/dropTables.js",
     "start": "node server/server.js",

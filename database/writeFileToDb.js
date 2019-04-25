@@ -25,7 +25,7 @@ pool.query(`CREATE TABLE IF NOT EXISTS details (
     console.error('error after table creation:', err);
   }
   console.log('about to run copy');
-  pool.query(`COPY details(type,pageNum,publisher,dates,title,isbn10,isbn13,language,characters,settings,litAwards,editions) FROM '/Users/anacollado/Desktop/hr-projects/sdc-book-details-service/bookDetails.csv' WITH (FORMAT CSV, DELIMITER '|')`,
+  pool.query(`COPY details(type,pageNum,publisher,dates,title,isbn10,isbn13,language,characters,settings,litAwards,editions) FROM '${__dirname}/../bookDetails.csv' WITH (FORMAT CSV, DELIMITER '|')`,
   (err, result) => {
     if (err) {
       console.error('error after copy:', err);

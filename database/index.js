@@ -1,37 +1,24 @@
-const mysql = require('mysql');
-const Promise = require('bluebird');
+const pg = require('pg');
 
+const CONNECTION_STRING = process.env.BOOKS_PG_CONN_STRING;
 
-const connection = mysql.createConnection({
-  user: 'root',
-  password:'dobby',
-  host: 'localhost',
-  database: 'books'
+const pool = new pg.Pool({
+  connectionString: CONNECTION_STRING
 });
-
-const db = Promise.promisifyAll(connection, { multiArgs: true });
-
-// best not to always seed database on server start!
-db.connectAsync()
-  .then(() => console.log(`connected to mysql with id ${db.threadId}`))
-  .error((err) => { console.log('error connecting to db', err); });
-
-module.exports = db;
 
 
 const getDetails = (id) => {
-  const queryString = 'SELECT * FROM details WHERE id = ?';
+  const queryString = 'SELECT * FROM details WHERE id = $1';
   const params = [id];
-
-  return db.queryAsync(queryString, params);
-};
-
-const getTableData = (table, id) => {
-  const queryString = 'SELECT * FROM ?? WHERE bookId = ?';
-  const params = [table, id];
-  return db.queryAsync(queryString, params);
+  return pool.query(queryString, params);
 };
 
 
-module.exports.getTableData = getTableData;
+const createBookDetails = (data) => {
+  const queryString = 'INSERT INTO details (type, pageNum, publisher, dates, title, isbn10, isbn13, language, characters, settings, litAwards, editions) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)';
+  const params = [data.type, data.pageNum, data.publisher, data.dates, data.title, data.isbn10, data.isbn13, data.language, data.characters, data.settings, data.litAwards, data.editions];
+  return pool.query(queryString, params);
+}
+
+module.exports.createBookDetails = createBookDetails;
 module.exports.getDetails = getDetails;

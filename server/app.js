@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const cors = require('cors');
+const path = require('path');
 const db = require('../database/index');
 
 const app = express();
@@ -11,6 +12,7 @@ app.use(cors());
 
 const staticPath = `${__dirname}/../public`;
 app.use('/books/:id', express.static(staticPath));
+app.get('/loaderio-360b76fdb24db5d85423413500cf2f9f', (req, res) => res.sendFile(path.resolve(`${staticPath}/loaderio-key.txt`)));
 
 // get initial details
 app.get('/books/:id/details', (req, res) => {
@@ -18,10 +20,9 @@ app.get('/books/:id/details', (req, res) => {
 
   db.getDetails(id)
     .then((results) => {
-      const details = results[0][0];
-
+      const details = results.rows[0];
       if (!details) {
-        res.status(404).send('no data @ specified id');
+        res.sendStatus(404);
       } else {
         res.send(details);
       }
@@ -33,8 +34,21 @@ app.get('/books/:id/details', (req, res) => {
 
 
 app.post('/books/details', (req, res) => {
-  const { id } = req.params;
-  //create book
+  const rawDetailsObj = req.body;
+  const detailsObj = Object.assign({}, rawDetailsObj, {
+    dates: JSON.stringify(rawDetailsObj.dates),
+    characters: JSON.stringify(rawDetailsObj.characters),
+    settings: JSON.stringify(rawDetailsObj.settings),
+    litAwards: JSON.stringify(rawDetailsObj.litAwards),
+    editions: JSON.stringify(rawDetailsObj.editions)
+  });
+  db.createBookDetails(detailsObj)
+    .then(() => {
+      res.sendStatus(201);
+    })
+    .catch((err) => {
+      res.status(500).send(err);
+    });
 });
 
 app.put('/books/:id/details', (req, res) => {
@@ -48,20 +62,22 @@ app.delete('/books/:id/details', (req, res) => {
   //delete book
 
 });
+
 // get data from either characters, awards, or editions table depending on table variable.
 app.get('/books/:id/details/:table', (req, res) => {
   const { id } = req.params;
   const { table } = req.params;
 
   if (table === 'characters' || table === 'awards' || table === 'editions' || table === 'settings') {
-    db.getTableData(table, id)
+    db.getDetails(id)
       .then((results) => {
+        console.log('74', results);
         const data = results[0];
 
         if (data.length === 0) {
           res.status(404).send('no data @ specified id');
         } else {
-          res.send(data);
+          res.send(data[table]);
         }
       })
       .catch((err) => {

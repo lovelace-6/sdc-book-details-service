@@ -66,17 +66,21 @@ app.delete('/books/:id/details', (req, res) => {
 // get data from either characters, awards, or editions table depending on table variable.
 app.get('/books/:id/details/:table', (req, res) => {
   const { id } = req.params;
-  const { table } = req.params;
+  let { table } = req.params;
 
-  if (table === 'characters' || table === 'awards' || table === 'editions' || table === 'settings') {
+  //adjust for discrepancy in field name
+  if (table === 'awards') {
+    table = 'litAwards';
+  }
+
+  if (table === 'characters' || table === 'litAwards' || table === 'editions' || table === 'settings') {
     db.getDetails(id)
       .then((results) => {
-        console.log('74', results);
-        const data = results[0];
-
-        if (data.length === 0) {
+        if (results.rows.length === 0) {
           res.status(404).send('no data @ specified id');
         } else {
+          const data = results.rows[0];
+
           res.send(data[table]);
         }
       })

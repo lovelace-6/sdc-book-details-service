@@ -42,9 +42,8 @@ class OtherEditions extends React.Component {
     const { editionsMain } = this.state;
     const editionArray = [];
     editionsMain.forEach((edition, i) => {
-      const { id } = edition;
       editionArray.push(
-        <Edition key={id} editionData={edition} />,
+        <Edition key={i} editionData={edition} />,
       );
     });
     return editionArray;

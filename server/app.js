@@ -12,7 +12,7 @@ app.use(cors());
 
 const staticPath = `${__dirname}`;
 app.use('/books/:id', express.static(staticPath));
-app.get('/loaderio-47166b40a5a0075950774cb3fb9d7285', (req, res) => res.sendFile(path.resolve(`/Users/anacollado/Desktop/hr-projects/sdc-book-details-service/loaderio-key.txt`)));
+app.get('/loaderio-47166b40a5a0075950774cb3fb9d7285', (req, res) => res.sendFile(path.resolve(`${staticPath}/loaderio-key.txt`)));
 
 // get initial details
 app.get('/books/:id/details', (req, res) => {

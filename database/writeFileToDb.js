@@ -12,7 +12,7 @@ pool.query(`CREATE TABLE IF NOT EXISTS details (
   pageNum INT,
   publisher VARCHAR(100),
   dates JSON,
-  title VARCHAR(100),
+  title TEXT,
   isbn10 VARCHAR(20),
   isbn13 VARCHAR(20),
   language VARCHAR(20),

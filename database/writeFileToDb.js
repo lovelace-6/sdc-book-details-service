@@ -1,7 +1,9 @@
 const pg = require('pg');
+const path = require('path');
 //'books' db already created, included in conn string
-const CONNECTION_STRING = process.env.BOOKS_PG_CONN_STRING;
-
+const CONNECTION_STRING = 'postgres://root:dobby@localhost:5432/books';
+//const CONNECTION_STRING = process.env.BOOKS_PG_CONN_STRING;
+console.log(CONNECTION_STRING);
 const pool = new pg.Pool({
   connectionString: CONNECTION_STRING
 })
@@ -25,12 +27,12 @@ pool.query(`CREATE TABLE IF NOT EXISTS details (
     console.error('error after table creation:', err);
   }
   console.log('about to run copy');
-  pool.query(`COPY details(type,pageNum,publisher,dates,title,isbn10,isbn13,language,characters,settings,litAwards,editions) FROM '${__dirname}/../bookDetails.csv' WITH (FORMAT CSV, DELIMITER '|')`,
+const filePath = path.resolve(`${__dirname}/../bookDetails.csv`);
+  pool.query(`COPY details(type,pageNum,publisher,dates,title,isbn10,isbn13,language,characters,settings,litAwards,editions) FROM '${filePath}' WITH (FORMAT CSV, DELIMITER '|')`,
   (err, result) => {
     if (err) {
       console.error('error after copy:', err);
     }
     console.log('done with copy');
     pool.end();
-  });
-});
+  });});

@@ -17,10 +17,12 @@ app.get('/loaderio-360b76fdb24db5d85423413500cf2f9f', (req, res) => res.sendFile
 // get initial details
 app.get('/books/:id/details', (req, res) => {
   const { id } = req.params;
-
+  console.log('in GET', id);
   db.getDetails(id)
     .then((results) => {
+
       const details = results.rows[0];
+      console.log(results, details);
       if (!details) {
         res.sendStatus(404);
       } else {

@@ -1,6 +1,7 @@
 const pg = require('pg');
 
-const CONNECTION_STRING = process.env.BOOKS_PG_CONN_STRING;
+const CONNECTION_STRING = 'postgres://root:dobby@localhost:5432/books';
+//const CONNECTION_STRING = process.env.BOOKS_PG_CONN_STRING;
 
 const pool = new pg.Pool({
   connectionString: CONNECTION_STRING
